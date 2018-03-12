@@ -47,8 +47,7 @@ missing-modules:
   # removes another and then the installation of that other
   # package removes the first one - (╯°□°）╯︵ ┻━┻)
   # when resolved swap out the `npm install` for the next line
-  # $(NPM) install $(call when-more-than,10,,$(sort $(shell cat .make-cache$/missing-modules)))
-	$(NPM) install
+	$(call when-not-empty,$(sort $(shell cat .make-cache$/missing-modules)),$(NPM) install)
 
 .SECONDEXPANSION: node_modules
 node_modules: DEPS = $(shell $(NODE) -e 'console.log(Object.keys(require(".$/package.json").dependencies).join(" "))')
