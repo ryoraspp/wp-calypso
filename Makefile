@@ -1,6 +1,6 @@
 include Makefile-utils.mk
 
-node-modules: npm-shrinkwrap.json
+node_modules: npm-shrinkwrap.json
 	$(NPM) install
 
 #
