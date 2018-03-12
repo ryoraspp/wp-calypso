@@ -31,15 +31,23 @@ FILES_SCSS := $(shell \
 GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 
 # node/npm helpers
-NPM_BIN := node_modules$/.bin$/
-NODE    := node
-NPM     := npm
+NODE_ENV ?= development
+NPM_BIN  := node_modules$/.bin$/
+NODE     := node
+NPM      := npm
 
 # $(call npm-deps,package-a package-b package-c)
 npm-deps = $(addprefix node_modules$/,$1)
 
+node_modules: npm-shrinkwrap.json
+	$(NPM) install
+
+# When installing here then we're probably running a
+# build command like `eslint` and don't need to be
+# _as_ stringent on updating when the `package.json`
+# or `npm-shrinkwrap.json` files change
 .SECONDARY: node_modules%
-node_modules$/%: npm-shrinkwrap.json package.json
+node_modules$/%:
 	$(NPM) install $(notdir $@)
 
 # Optimizing phony targets that should

@@ -1,8 +1,5 @@
 include Makefile-utils.mk
 
-node_modules: npm-shrinkwrap.json
-	$(NPM) install
-
 #
 # Calypso
 #
