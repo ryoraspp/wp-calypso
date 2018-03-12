@@ -9,13 +9,19 @@ pre-start: welcome versions
 versions: B = $(FG_BLUE)
 versions: R = $(FG_RED)
 versions: Z = $(FG_RESET)
-versions: CHECK = if [ $$WANT_$2 != $$HAVE_$2 ]; then echo -e "$Rx$Z $1 major version is $R$$HAVE_$2$Z but we need $B$$WANT_$2$Z"; exit 1; fi
+versions: PATTERN = ^v*\([0-9]*\)\(.*\)
+versions: MAJOR = `$1 | sed -n 's/$(PATTERN)/\1/p'`
+versions: COLOR = `$2 | sed -n 's/$(PATTERN)/\$1\1\$Z\2/p'`
+versions: CHECK = @\
+	export BASE=$($2); \
+	export JSON=`$(NODE) -e 'console.log(require(".$/package.json").engines.$1)'`; \
+	export WMAJ=$(call MAJOR,echo $$JSON); \
+	export HMAJ=$(call MAJOR,$$BASE -v); \
+	export WANT=$(call COLOR,$R,echo $$JSON); \
+	export HAVE=$(call COLOR,$B,$$BASE -v); \
+	[ $$WMAJ != $$HMAJ ] && echo -e "$Rx$Z need $1 major version $$WANT but have $$HAVE instead" && exit 1
 versions: $(NODE) $(NPM)
-	@export WANT_NODE=`$(NODE) -e 'console.log(require(".$/package.json").engines.node.split(".")[0])'`; \
-	export HAVE_NODE=`$(NODE) -v | sed -n 's/^v\([0-9]*\).*/\1/p'`; \
-	$(call CHECK,node,NODE); \
-	export WANT_NPM=`$(NODE) -e 'console.log(require(".$/package.json").engines.npm.split(".")[0])'`; \
-	export HAVE_NPM=`$(NPM) -v | sed -n 's/^\([0-9]*\).*/\1/p'`; \
+	$(call CHECK,node,NODE)
 	$(call CHECK,npm,NPM)
 	$~
 
