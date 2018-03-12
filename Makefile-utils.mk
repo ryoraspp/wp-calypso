@@ -29,6 +29,7 @@ FILES_SCSS := $(shell \
 
 # git
 GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+GIT_HASH   := $(shell git rev-parse HEAD)
 
 # node/npm helpers
 NODE_ENV ?= development
@@ -68,6 +69,7 @@ BOOT := $(shell mkdir -p .make-cache)
 TOUCH_CACHE = touch .make-cache$/
 ~ = $(strip $(TOUCH_CACHE))$(subst $/,-,$@)
 
+vpath docker .make-cache
 vpath lint% .make-cache
 vpath pre-commit .make-cache
 vpath versions .make-cache

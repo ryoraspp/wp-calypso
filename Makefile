@@ -30,6 +30,13 @@ welcome:
 	@echo -e "$(FG_CYAN)"; echo $(WELCOME) | base64 -D | gzip -d; echo -e "$(TERM_RESET)"
 
 #
+# Docker
+#
+docker: Dockerfile Makefile Makefile-utils.mk assets bin client config docs public server test $(filter %.js %.json %.sh,$(wildcard *))
+	docker build --build-arg commit_sha=$(GIT_HASH) -t wp-calypso .
+	$~
+
+#
 # Linting
 #
 .PHONY: lint
