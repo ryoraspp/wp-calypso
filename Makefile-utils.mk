@@ -41,8 +41,14 @@ npm-deps = $(addprefix node_modules$/,$1) missing-modules
 
 .PHONY: missing-modules
 missing-modules:
-	$(RM) .make-cache$/needed-modules; \
-	$(NPM) install $(shell cat .make-cache$/needed-modules)
+	$(RM) .make-cache$/missing-modules; \
+  # Due to a bug in npm it's removing packages on install and
+  # we can get in cycles where the installation of one package
+  # removes another and then the installation of that other
+  # package removes the first one - (╯°□°）╯︵ ┻━┻)
+  # when resolved swap out the `npm install` for the next line
+  # $(NPM) install $(call when-more-than,10,,$(sort $(shell cat .make-cache$/missing-modules)))
+	$(NPM) install
 
 .SECONDEXPANSION: node_modules
 node_modules: DEPS = $(shell $(NODE) -e 'console.log(Object.keys(require(".$/package.json").dependencies).join(" "))')
@@ -55,7 +61,7 @@ node_modules: npm-shrinkwrap.json package.json $$(call npm-deps,$$(DEPS) $$(DEVS
 # or `npm-shrinkwrap.json` files change
 .SECONDARY: node_modules%
 node_modules$/%:
-	echo "$(notdir $@) " >> .make-cache$/needed-modules
+	echo "$(notdir $@)" >> .make-cache$/missing-modules
 
 # Optimizing phony targets that should
 # only run when their dependencies change
