@@ -55,7 +55,7 @@ node_modules: npm-shrinkwrap.json package.json $$(call npm-deps,$$(DEPS) $$(DEVS
 # or `npm-shrinkwrap.json` files change
 .SECONDARY: node_modules%
 node_modules$/%:
-	echo "$(notdir $@) " > .make-cache$/needed-modules
+	echo "$(notdir $@) " >> .make-cache$/needed-modules
 
 # Optimizing phony targets that should
 # only run when their dependencies change
