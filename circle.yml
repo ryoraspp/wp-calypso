@@ -21,7 +21,7 @@ test:
           - bin/**/integration/*.js
           - client/**/integration/*.js
           - server/**/integration/*.js
-    - npm run lint:config-defaults
+    - make lint-config
     - ./node_modules/.bin/eslint-eslines:
         parallel: true
         files:
