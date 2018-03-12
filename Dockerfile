@@ -38,14 +38,10 @@ RUN        true \
 # Calypso development.
 #
 # If package.json and npm-shrinkwrap are unchanged,
-# `install-if-deps-outdated` should require no action.
-# However, time is being spent in the build step on
-# `install-if-deps-outdated`. This is because in the
-# following COPY, the npm-shrinkwrap mtime is being
-# updated, which is confusing `install-if-deps-outdated`.
-# Touch after copy to ensure that this layer will
-# not trigger additional install as part of the build
-# in the following step.
+# `make node-modules` should require no action.
+# However, since we are COPYing the files we are
+# updating their modification times and we want to
+# prevent the extra work by fake-updating node-modules
 COPY       . /calypso/
 RUN        touch node_modules
 
