@@ -211,7 +211,6 @@
     "lint": "make lint",
     "precommit": "make node-modules && node bin/pre-commit-hook.js",
     "prepush": "make node-modules && node bin/pre-push-hook.js",
-    "rm": "node bin/rm.js",
     "postshrinkwrap": "node bin/trim-shrinkwrap.js && touch node_modules",
     "prestart": "make node-modules && node bin/welcome.js && node bin/version-check.js",
     "start": "npm run -s build",
