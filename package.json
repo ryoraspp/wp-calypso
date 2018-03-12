@@ -217,7 +217,6 @@
     "pretest-client": "npm run -s pretest",
     "pretest-integration": "npm run -s pretest",
     "pretest-server": "npm run -s pretest",
-    "reformat-files": "node bin/reformat-files.js",
     "start": "npm run -s build",
     "poststart": "CALYPSO_CLIENT=true npm run -s env -- cross-env-shell node $NODE_ARGS build/bundle.js",
     "reformat-files": "node bin/reformat-files.js",
