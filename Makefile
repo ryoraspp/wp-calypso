@@ -4,7 +4,7 @@ include Makefile-utils.mk
 # Calypso
 #
 .PHONY: pre-start
-pre-start: welcom versions
+pre-start: welcome versions
 
 versions: B = $(FG_BLUE)
 versions: R = $(FG_RED)
