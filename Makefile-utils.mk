@@ -111,6 +111,7 @@ WELCOME=\
 .POSIX:
 .SUFFIXES:
 SHELL := bash
+CONCURRENCY ?= -j6
 UNQUIET ?= --quiet
 UNQUIET :=
-MAKEFLAGS += --no-builtin-rules $(UNQUIET)
+MAKEFLAGS += --no-builtin-rules $(CONCURRENCY) $(UNQUIET)
