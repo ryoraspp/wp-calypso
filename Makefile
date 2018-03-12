@@ -9,19 +9,14 @@ pre-start: welcom versions
 versions: B = $(FG_BLUE)
 versions: R = $(FG_RED)
 versions: Z = $(FG_RESET)
+versions: CHECK = if [ $$WANT_$2 != $$HAVE_$2 ]; then echo -e "$Rx$Z $1 major version is $R$$HAVE_$2$Z but we need $B$$WANT_$2$Z"; exit 1; fi
 versions: $(NODE) $(NPM)
-	@export EXPECTED_NODE=`$(NODE) -e 'console.log(require(".$/package.json").engines.node.split(".")[0])'`; \
-	export ACTUAL_NODE=`$(NODE) -v | sed -n 's/^v\([0-9]*\).*/\1/p'`; \
-	if [ $$EXPECTED_NODE != $$ACTUAL_NODE ]; then \
-		echo -e "$Rx$Z node major version is $R$$ACTUAL_NODE$Z but we need $B$$EXPECTED_NODE$Z"; \
-		exit 1; \
-	fi; \
-	export EXPECTED_NPM=`$(NODE) -e 'console.log(require(".$/package.json").engines.npm.split(".")[0])'`; \
-	export ACTUAL_NPM=`$(NPM) -v | sed -n 's/^\([0-9]*\).*/\1/p'`; \
-	if [ $$EXPECTED_NPM != $$ACTUAL_NPM ]; then \
-		echo -e "$Rx$Z npm major version is $R$$ACTUAL_NPM$Z but we need $B$$EXPECTED_NPM$Z"; \
-		exit 1; \
-	fi; \
+	@export WANT_NODE=`$(NODE) -e 'console.log(require(".$/package.json").engines.node.split(".")[0])'`; \
+	export HAVE_NODE=`$(NODE) -v | sed -n 's/^v\([0-9]*\).*/\1/p'`; \
+	$(call CHECK,node,NODE); \
+	export WANT_NPM=`$(NODE) -e 'console.log(require(".$/package.json").engines.npm.split(".")[0])'`; \
+	export HAVE_NPM=`$(NPM) -v | sed -n 's/^\([0-9]*\).*/\1/p'`; \
+	$(call CHECK,npm,NPM)
 	$~
 
 .PHONY: welcome
