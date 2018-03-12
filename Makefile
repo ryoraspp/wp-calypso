@@ -19,7 +19,7 @@ versions: CHECK = @\
 	export HMAJ=$(call MAJOR,$$BASE -v); \
 	export WANT=$(call COLOR,$R,echo $$JSON); \
 	export HAVE=$(call COLOR,$B,$$BASE -v); \
-	[ $$WMAJ != $$HMAJ ] && echo -e "$Rx$Z need $1 major version $$WANT but have $$HAVE instead" && exit 1
+	[ $$WMAJ != $$HMAJ ] && echo -e "$Rx$Z need $1 major version $$WANT but have $$HAVE instead" && exit 1 || exit 0
 versions: $(NODE) $(NPM)
 	$(call CHECK,node,NODE)
 	$(call CHECK,npm,NPM)
