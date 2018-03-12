@@ -46,7 +46,7 @@ missing-modules:
   # we can get in cycles where the installation of one package
   # removes another and then the installation of that other
   # package removes the first one - (╯°□°）╯︵ ┻━┻)
-  # when resolved swap out the `npm install` for the next line
+  # when resolved install only the required dependencies
 	$(call when-not-empty,$(sort $(shell cat .make-cache$/missing-modules)),$(NPM) install)
 
 .SECONDEXPANSION: node_modules
