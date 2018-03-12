@@ -33,14 +33,21 @@ GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 # node/npm helpers
 NODE_ENV ?= development
 NPM_BIN  := node_modules$/.bin$/
-NODE     := node
-NPM      := npm
+NODE     := $(shell which node)
+NPM      := $(shell which npm)
 
 # $(call npm-deps,package-a package-b package-c)
-npm-deps = $(addprefix node_modules$/,$1)
+npm-deps = $(addprefix node_modules$/,$1) missing-modules
 
-node_modules: npm-shrinkwrap.json
-	$(NPM) install
+.PHONY: missing-modules
+missing-modules:
+	$(RM) .make-cache$/needed-modules; \
+	$(NPM) install $(shell cat .make-cache$/needed-modules)
+
+.SECONDEXPANSION: node_modules
+node_modules: DEPS = $(shell $(NODE) -e 'console.log(Object.keys(require(".$/package.json").dependencies).join(" "))')
+node_modules: DEVS = $(shell $(NODE) -e 'console.log(Object.keys(require(".$/package.json").devDependencies).join(" "))')
+node_modules: npm-shrinkwrap.json package.json $$(call npm-deps,$$(DEPS) $$(DEVS))
 
 # When installing here then we're probably running a
 # build command like `eslint` and don't need to be
@@ -48,7 +55,7 @@ node_modules: npm-shrinkwrap.json
 # or `npm-shrinkwrap.json` files change
 .SECONDARY: node_modules%
 node_modules$/%:
-	$(NPM) install $(notdir $@)
+	echo "$(notdir $@) " > .make-cache$/needed-modules
 
 # Optimizing phony targets that should
 # only run when their dependencies change
@@ -58,6 +65,7 @@ TOUCH_CACHE = touch .make-cache$/
 
 vpath lint% .make-cache
 vpath pre-commit .make-cache
+vpath versions .make-cache
 
 # Convenience utilities
 

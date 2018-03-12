@@ -6,11 +6,10 @@ include Makefile-utils.mk
 .PHONY: pre-start
 pre-start: welcom versions
 
-.PHONY: versions
 versions: B = $(FG_BLUE)
 versions: R = $(FG_RED)
 versions: Z = $(FG_RESET)
-versions:
+versions: $(NODE) $(NPM)
 	@export EXPECTED_NODE=`$(NODE) -e 'console.log(require(".$/package.json").engines.node.split(".")[0])'`; \
 	export ACTUAL_NODE=`$(NODE) -v | sed -n 's/^v\([0-9]*\).*/\1/p'`; \
 	if [ $$EXPECTED_NODE != $$ACTUAL_NODE ]; then \
@@ -22,7 +21,8 @@ versions:
 	if [ $$EXPECTED_NPM != $$ACTUAL_NPM ]; then \
 		echo -e "$Rx$Z npm major version is $R$$ACTUAL_NPM$Z but we need $B$$EXPECTED_NPM$Z"; \
 		exit 1; \
-	fi;
+	fi; \
+	$~
 
 .PHONY: welcome
 welcome:
@@ -31,8 +31,8 @@ welcome:
 #
 # Linting
 #
+.PHONY: lint
 lint: lint-config lint-css lint-js
-	$~
 
 lint-config: config
 	$(NODE) server$/config$/validate-config-keys.js
