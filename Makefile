@@ -27,7 +27,7 @@ versions: $(NODE) $(NPM)
 
 .PHONY: welcome
 welcome:
-	@echo -e "$(FG_CYAN)"; cat bin$/welcome.txt; echo -e "$(TERM_RESET)"
+	@echo -e "$(FG_CYAN)"; echo $(WELCOME) | base64 -D | gzip -d; echo -e "$(TERM_RESET)"
 
 #
 # Linting

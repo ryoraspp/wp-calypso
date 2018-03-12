@@ -95,6 +95,16 @@ FG_RED     = \\033[31m
 FG_RESET   = \\033[39m
 TERM_RESET = \\033[0m
 
+# Surprise
+WELCOME=\
+	H4sIAAAAAAAA/1VMQQ7AM\
+	Ai6+wpuW5Nl/ZAJe4iPH9\
+	hk6bRgQSKwFaOZhF+haIm\
+	WbZucmfoID+rrg0jbJUIq\
+	VDi50L0mB1J3Uv5A+ZQkh\
+	YtKeCp163jJnt7NwL96o3\
+	DEC1DrkHm8AAAA
+
 # Reset make
 .POSIX:
 .SUFFIXES:
