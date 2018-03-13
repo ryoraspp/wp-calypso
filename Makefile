@@ -29,6 +29,10 @@ versions: $(NODE) $(NPM)
 welcome:
 	@echo -e "$(FG_CYAN)"; echo $(WELCOME) | base64 -D | gzip -d; echo -e "$(TERM_RESET)"
 
+calypso-strings.pot: $(FILES_JS)
+	$(NPM_BIN)i18n-calypso --format pot --output-file ./calypso-strings.pot -e date "**/*.js" "**/*.jsx" "!build/**" "!node_modules/**" "!public/**"
+	$~
+
 #
 # Docker
 #
@@ -109,7 +113,12 @@ clean-build:
 clean-devdocs:
 	$(RM) $(addprefix server$/devdocs$/,search-index.js prototypes-index.json components-usage-stats.json)
 
+.PHONY: clean-npm
+clean-npm:
+	$(RM) node_modules npm-shrinkwrap.json
+
 .PHONY: clean-public
+clean-public:
 	$(RM) \
 		$(addprefix public$/*.,css css.map js js.map) \
 		$(addprefix public$/sections$/*.,css css.map) \

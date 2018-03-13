@@ -40,6 +40,10 @@ NPM      := $(shell which npm)
 # $(call npm-deps,package-a package-b package-c)
 npm-deps = $(addprefix node_modules$/,$1) missing-modules
 
+npm-shrinkwrap.json: clean-npm
+	$(NPM) install && \
+	$(NPM) shrinkwrap
+
 .PHONY: missing-modules
 missing-modules:
 	$(RM) .make-cache$/missing-modules; \
@@ -53,7 +57,7 @@ missing-modules:
 .SECONDEXPANSION: node_modules
 node_modules: DEPS = $(shell $(NODE) -e 'console.log(Object.keys(require(".$/package.json").dependencies).join(" "))')
 node_modules: DEVS = $(shell $(NODE) -e 'console.log(Object.keys(require(".$/package.json").devDependencies).join(" "))')
-node_modules: npm-shrinkwrap.json package.json $$(call npm-deps,$$(DEPS) $$(DEVS))
+node_modules: $$(call npm-deps,$$(DEPS) $$(DEVS))
 
 # When installing here then we're probably running a
 # build command like `eslint` and don't need to be
