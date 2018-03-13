@@ -115,6 +115,6 @@ clean-devdocs:
 		$(addprefix public$/sections$/*.,css css.map) \
 		$(addprefix public$/sections-rtl$/*.,css css.map)
 
-.PHONY: dist-clean
-dist-clean: clean
+.PHONY: distclean
+distclean: clean
 	$(RM) node_modules .make-cache
