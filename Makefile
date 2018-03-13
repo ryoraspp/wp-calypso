@@ -32,9 +32,13 @@ welcome:
 #
 # Docker
 #
-docker: Dockerfile Makefile Makefile-utils.mk assets bin client config docs public server test $(filter %.js %.json %.sh,$(wildcard *))
+docker-image: Dockerfile Makefile Makefile-utils.mk assets bin client config docs public server test $(filter %.js %.json %.sh,$(wildcard *))
 	docker build --build-arg commit_sha=$(GIT_HASH) -t wp-calypso .
 	$~
+
+.PHONY: docker
+docker: docker-image
+	docker run -it --name wp-calypso --rm -p 80:3000 wp-calypso
 
 #
 # Linting
@@ -110,3 +114,7 @@ clean-devdocs:
 		$(addprefix public$/*.,css css.map js js.map) \
 		$(addprefix public$/sections$/*.,css css.map) \
 		$(addprefix public$/sections-rtl$/*.,css css.map)
+
+.PHONY: dist-clean
+dist-clean: clean
+	$(RM) node_modules .make-cache
