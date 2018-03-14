@@ -74,8 +74,9 @@ TOUCH_CACHE = touch .make-cache$/
 ~ = $(strip $(TOUCH_CACHE))$(subst $/,-,$@)
 
 vpath docker-image .make-cache
-vpath lint% .make-cache
+vpath lint-% .make-cache
 vpath pre-commit .make-cache
+vpath test-% .make-cache
 vpath versions .make-cache
 
 # Convenience utilities

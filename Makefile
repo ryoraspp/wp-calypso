@@ -67,6 +67,22 @@ lint-js: $(FILES_JS) | $(call npm-deps,eslint-eslines)
 	$~
 
 #
+# Testing
+#
+.PHONY: test
+test: test-client test-server
+
+.PHONY: test-client
+test-client: $(FILES_JS) | $(call npm-deps,jest)
+	$(NPM_BIN)jest -c=test/client/jest.config.json
+	$~
+
+.PHONY: test-server
+test-server: $(FILES_JS) | $(call npm-deps,jest)
+	$(NPM_BIN)jest -c=test/server/jest.config.json
+	$~
+
+#
 # Git
 #
 .PHONY: pre-push
