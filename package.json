@@ -205,7 +205,6 @@
     "postcss": "postcss -r -u postcss-custom-properties -u autoprefixer -c postcss.config.json",
     "postshrinkwrap": "node bin/trim-shrinkwrap.js && touch node_modules",
     "poststart": "npm run -s env -- cross-env-shell node $NODE_ARGS build/bundle.js",
-    "preanalyze-bundles": "cross-env-shell CALYPSO_ENV=production npm run -s build-client -- --profile --json > stats.json",
     "prebuild": "make node_modules",
     "prebuild-desktop": "make node_modules",
     "prebuild-server": "mkdirp build",
