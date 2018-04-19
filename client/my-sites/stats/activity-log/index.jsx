@@ -15,6 +15,7 @@ import { get, includes, isEmpty } from 'lodash';
 import ActivityLogBanner from 'my-sites/stats/activity-log-banner';
 import ActivityLogItem from '../activity-log-item';
 import ActivityLogSwitch from '../activity-log-switch';
+import ActivityLogTasklist from '../activity-log-tasklist';
 import Banner from 'components/banner';
 import DocumentHead from 'components/data/document-head';
 import EmptyContent from 'components/empty-content';
@@ -409,6 +410,7 @@ class ActivityLog extends Component {
 						) }
 					/>
 				) }
+				{ siteId && <ActivityLogTasklist siteId={ siteId } /> }
 				{ this.renderErrorMessage() }
 				{ this.renderActionProgress() }
 				{ isEmpty( logs ) ? (
