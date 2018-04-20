@@ -580,6 +580,7 @@ export function recordOrder( cart, orderId ) {
 	recordOrderInAtlas( cart, orderId );
 	recordOrderInCriteo( cart, orderId );
 	recordOrderInFloodlight( cart, orderId );
+	recordOrderInFacebook( cart, orderId );
 
 	// This has to come before we add the items to the Google Analytics cart
 	recordOrderInGoogleAnalytics( cart, orderId );
@@ -679,17 +680,6 @@ function recordProduct( product, orderId ) {
 					google_remarketing_only: false,
 				} );
 			}
-		}
-
-		// Facebook
-		if ( isFacebookEnabled ) {
-			window.fbq( 'track', 'Purchase', {
-				currency: product.currency,
-				product_slug: product.product_slug,
-				value: product.cost,
-				user_id: userId,
-				order_id: orderId,
-			} );
 		}
 
 		// Twitter
@@ -838,6 +828,35 @@ function recordOrderInFloodlight( cart, orderId ) {
 	};
 
 	recordParamsInFloodlight( params );
+}
+
+/**
+ * Records an order in Facebook (a single event for the entire order)
+ *
+ * @param {Object} cart - cart as `CartValue` object
+ * @param {Number} orderId - the order id
+ * @returns {void}
+ */
+function recordOrderInFacebook( cart, orderId ) {
+	if ( ! isAdTrackingAllowed() || ! isFacebookEnabled ) {
+		return;
+	}
+
+	debug( 'recordOrderInFacebook: Record purchase' );
+
+	const currentUser = user.get();
+
+	const fbParams = {
+		currency: cart.currency,
+		product_slug: cart.products.map( product => product.product_slug ).join( ', ' ),
+		value: cart.total_cost,
+		user_id: currentUser ? currentUser.ID : 0,
+		order_id: orderId,
+	};
+
+	debug( 'recordParamsInFacebook: ', fbParams );
+
+	window.fbq( 'track', 'Purchase', fbParams );
 }
 
 /**
