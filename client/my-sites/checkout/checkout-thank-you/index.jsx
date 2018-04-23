@@ -78,6 +78,7 @@ import { GROUP_WPCOM, GROUP_JETPACK, TYPE_BUSINESS } from 'lib/plans/constants';
 
 import { hasSitePendingAutomatedTransfer, isSiteAutomatedTransfer } from 'state/selectors';
 import { recordStartTransferClickInThankYou } from 'state/domains/actions';
+import PageViewTracker from 'lib/analytics/page-view-tracker';
 
 function getPurchases( props ) {
 	return [
@@ -259,7 +260,7 @@ export class CheckoutThankYou extends React.Component {
 	};
 
 	render() {
-		const { translate } = this.props;
+		const { analyticsPath, analyticsProps, translate } = this.props;
 		let purchases = [];
 		let failedPurchases = [];
 		let wasJetpackPlanPurchased = false;
@@ -297,7 +298,13 @@ export class CheckoutThankYou extends React.Component {
 				group: GROUP_WPCOM,
 			} )
 		) {
-			return <RebrandCitiesThankYou receipt={ this.props.receipt } />;
+			return (
+				<RebrandCitiesThankYou
+					receipt={ this.props.receipt }
+					analyticsPath={ analyticsPath }
+					analyticsProps={ analyticsProps }
+				/>
+			);
 		}
 
 		const { hasPendingAT, isAtomicSite } = this.props;
@@ -305,6 +312,11 @@ export class CheckoutThankYou extends React.Component {
 		if ( wasDotcomPlanPurchased && ( hasPendingAT || isAtomicSite ) ) {
 			return (
 				<Main className="checkout-thank-you">
+					<PageViewTracker
+						path={ analyticsPath }
+						title="Checkout Thank You"
+						properties={ analyticsProps }
+					/>
 					{ this.renderConfirmationNotice() }
 					<AtomicStoreThankYouCard siteId={ this.props.selectedSite.ID } />
 				</Main>
@@ -325,6 +337,11 @@ export class CheckoutThankYou extends React.Component {
 			// streamlined paid NUX thanks page
 			return (
 				<Main className="checkout-thank-you">
+					<PageViewTracker
+						path={ analyticsPath }
+						title="Checkout Thank You"
+						properties={ analyticsProps }
+					/>
 					{ this.renderConfirmationNotice() }
 					<PlanThankYouCard siteId={ this.props.selectedSite.ID } { ...planProps } />
 				</Main>
@@ -332,6 +349,11 @@ export class CheckoutThankYou extends React.Component {
 		} else if ( wasJetpackPlanPurchased && config.isEnabled( 'plans/jetpack-config-v2' ) ) {
 			return (
 				<Main className="checkout-thank-you">
+					<PageViewTracker
+						path={ analyticsPath }
+						title="Checkout Thank You"
+						properties={ analyticsProps }
+					/>
 					{ this.renderConfirmationNotice() }
 					<JetpackThankYouCard siteId={ this.props.selectedSite.ID } />
 				</Main>
@@ -343,6 +365,11 @@ export class CheckoutThankYou extends React.Component {
 
 			return (
 				<Main className="checkout-thank-you">
+					<PageViewTracker
+						path={ analyticsPath }
+						title="Checkout Thank You"
+						properties={ analyticsProps }
+					/>
 					{ this.renderConfirmationNotice() }
 
 					<ThankYouCard
@@ -366,6 +393,11 @@ export class CheckoutThankYou extends React.Component {
 		// standard thanks page
 		return (
 			<Main className="checkout-thank-you">
+				<PageViewTracker
+					path={ analyticsPath }
+					title="Checkout Thank You"
+					properties={ analyticsProps }
+				/>
 				<HeaderCake onClick={ this.goBack } isCompact backText={ goBackText } />
 
 				<Card className="checkout-thank-you__content">{ this.productRelatedMessages() }</Card>
