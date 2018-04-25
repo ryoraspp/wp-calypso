@@ -9,6 +9,7 @@ import Gridicon from 'gridicons';
 import React, { Component } from 'react';
 import { includes } from 'lodash';
 import { localize } from 'i18n-calypso';
+import { connect } from 'react-redux';
 
 /**
  * Internal dependencies
@@ -19,6 +20,7 @@ import CompactCard from 'components/card/compact';
 import FormFieldset from 'components/forms/form-fieldset';
 import Popover from 'components/popover';
 import TokenField from 'components/token-field';
+import { recordTldFilterSelected } from './analytics';
 
 export class TldFilterBar extends Component {
 	static propTypes = {
@@ -33,6 +35,7 @@ export class TldFilterBar extends Component {
 		onChange: PropTypes.func.isRequired,
 		onReset: PropTypes.func.isRequired,
 		onSubmit: PropTypes.func.isRequired,
+		recordTldFilterSelected: PropTypes.func.isRequired,
 		showPlaceholder: PropTypes.bool.isRequired,
 	};
 
@@ -49,6 +52,12 @@ export class TldFilterBar extends Component {
 	handleButtonClick = event => {
 		const isCurrentlySelected = event.currentTarget.dataset.selected === 'true';
 		const newTld = event.currentTarget.value;
+
+		this.props.recordTldFilterSelected(
+			newTld,
+			event.currentTarget.dataset.index,
+			! isCurrentlySelected
+		);
 
 		const tldSet = new Set( [ ...this.props.filters.tlds, newTld ] );
 		if ( isCurrentlySelected ) {
@@ -100,10 +109,11 @@ export class TldFilterBar extends Component {
 
 		return (
 			<CompactCard className="search-filters__buttons">
-				{ availableTlds.slice( 0, numberOfTldsShown ).map( tld => (
+				{ availableTlds.slice( 0, numberOfTldsShown ).map( ( tld, index ) => (
 					<Button
 						className={ classNames( { 'is-active': includes( selectedTlds, tld ) } ) }
 						data-selected={ includes( selectedTlds, tld ) }
+						data-index={ index }
 						key={ tld }
 						onClick={ this.handleButtonClick }
 						value={ tld }
@@ -173,4 +183,6 @@ export class TldFilterBar extends Component {
 		);
 	}
 }
-export default localize( TldFilterBar );
+export default connect( null, {
+	recordTldFilterSelected,
+} )( localize( TldFilterBar ) );
