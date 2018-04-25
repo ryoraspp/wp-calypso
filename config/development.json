@@ -51,6 +51,7 @@
 		"domains/kracken-ui": true,
 		"domains/kracken-ui/filters": true,
 		"domains/kracken-ui/pagination": true,
+		"domains/kracken-ui/tld-filters": true,
 		"external-media": true,
 		"external-media/google-photos": true,
 		"external-media/free-photo-library": true,
