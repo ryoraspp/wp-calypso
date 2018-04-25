@@ -108,4 +108,12 @@ export default {
 		},
 		defaultVariation: 'no',
 	},
+	krackenShowTldFilterBar: {
+		datestamp: '20180502',
+		variations: {
+			hide: 50,
+			show: 50,
+		},
+		defaultVariation: 'hide',
+	},
 };

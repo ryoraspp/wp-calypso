@@ -32,6 +32,7 @@ import { localize } from 'i18n-calypso';
  * Internal dependencies
  */
 import config from 'config';
+import { abtest } from 'lib/abtest';
 import wpcom from 'lib/wp';
 import Card from 'components/card';
 import Notice from 'components/notice';
@@ -915,7 +916,9 @@ class RegisterDomainStep extends React.Component {
 			suggestions = this.props.defaultSuggestions || [];
 		}
 
-		const showTldFilterBar = config.isEnabled( 'domains/kracken-ui/tld-filters' );
+		const showTldFilterBar =
+			config.isEnabled( 'domains/kracken-ui/tld-filters' ) ||
+			abtest( 'krackenShowTldFilterBar' ) === 'show';
 
 		return (
 			<DomainSearchResults
