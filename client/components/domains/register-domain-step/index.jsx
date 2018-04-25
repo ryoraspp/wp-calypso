@@ -960,6 +960,7 @@ class RegisterDomainStep extends React.Component {
 						onChange={ this.onFiltersChange }
 						onReset={ this.onFiltersReset }
 						onSubmit={ this.onFiltersSubmit }
+						query={ this.state.lastQuery.trim() }
 						showPlaceholder={ this.state.loadingResults || ! suggestions }
 					/>
 				) }

@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import Gridicon from 'gridicons';
 import React, { Component } from 'react';
-import { includes } from 'lodash';
+import { includes, sortBy } from 'lodash';
 import { localize } from 'i18n-calypso';
 import { connect } from 'react-redux';
 
@@ -35,6 +35,7 @@ export class TldFilterBar extends Component {
 		onChange: PropTypes.func.isRequired,
 		onReset: PropTypes.func.isRequired,
 		onSubmit: PropTypes.func.isRequired,
+		query: PropTypes.string.isRequired,
 		recordTldFilterSelected: PropTypes.func.isRequired,
 		showPlaceholder: PropTypes.bool.isRequired,
 	};
@@ -88,6 +89,22 @@ export class TldFilterBar extends Component {
 		} );
 	};
 
+	getSortedAvailableTlds() {
+		const { availableTlds, query } = this.props;
+		// NOTE: If TLD is part of the user query, make it 5x more important than
+		//       the original order of the availableTlds array.
+		//
+		//       The comparison value is set to negative to force a descending sort.
+		return sortBy(
+			availableTlds,
+			tld =>
+				-(
+					5 * includes( query, tld ) +
+					( 1 - availableTlds.indexOf( tld ) / availableTlds.length )
+				)
+		);
+	}
+
 	render() {
 		const isKrackenUi = config.isEnabled( 'domains/kracken-ui/tld-filters' );
 		if ( ! isKrackenUi ) {
@@ -99,7 +116,6 @@ export class TldFilterBar extends Component {
 		}
 
 		const {
-			availableTlds,
 			filters: { tlds },
 			lastFilters: { tlds: selectedTlds },
 			translate,
@@ -109,18 +125,20 @@ export class TldFilterBar extends Component {
 
 		return (
 			<CompactCard className="search-filters__buttons">
-				{ availableTlds.slice( 0, numberOfTldsShown ).map( ( tld, index ) => (
-					<Button
-						className={ classNames( { 'is-active': includes( selectedTlds, tld ) } ) }
-						data-selected={ includes( selectedTlds, tld ) }
-						data-index={ index }
-						key={ tld }
-						onClick={ this.handleButtonClick }
-						value={ tld }
-					>
-						.{ tld }
-					</Button>
-				) ) }
+				{ this.getSortedAvailableTlds()
+					.slice( 0, numberOfTldsShown )
+					.map( ( tld, index ) => (
+						<Button
+							className={ classNames( { 'is-active': includes( selectedTlds, tld ) } ) }
+							data-selected={ includes( selectedTlds, tld ) }
+							data-index={ index }
+							key={ tld }
+							onClick={ this.handleButtonClick }
+							value={ tld }
+						>
+							.{ tld }
+						</Button>
+					) ) }
 				<Button
 					className={ classNames( { 'is-active': hasFilterValue } ) }
 					onClick={ this.togglePopover }
