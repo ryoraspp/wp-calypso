@@ -22,6 +22,7 @@ const POINT_SIZE = 3;
 const END_POINT_SIZE = 1;
 const MAX_DRAW_POINTS_SIZE = 10;
 const CHART_MARGIN = 0.01;
+const NUM_SERIES = 3;
 
 class LineChart extends Component {
 	static propTypes = {
@@ -79,7 +80,7 @@ class LineChart extends Component {
 			.curve( d3MonotoneXCurve );
 
 		data.forEach( ( dataSeries, index ) => {
-			const colorNum = index % 3;
+			const colorNum = index % NUM_SERIES;
 
 			svg
 				.append( 'path' )
@@ -95,7 +96,7 @@ class LineChart extends Component {
 				.curve( d3MonotoneXCurve );
 
 			data.forEach( ( dataSeries, index ) => {
-				const colorNum = index % 3;
+				const colorNum = index % NUM_SERIES;
 
 				svg
 					.append( 'path' )
@@ -111,7 +112,7 @@ class LineChart extends Component {
 
 		data.forEach( ( dataSeries, dataSeriesIndex ) => {
 			const drawFullSeries = dataSeries.length < MAX_DRAW_POINTS_SIZE;
-			const colorNum = dataSeriesIndex % 3;
+			const colorNum = dataSeriesIndex % NUM_SERIES;
 
 			( drawFullSeries ? dataSeries : [ first( dataSeries ), last( dataSeries ) ] ).forEach(
 				datum => {

@@ -72,3 +72,27 @@
 	@include placeholder();
 	padding-bottom: 50%;
  }
+
+ .line-chart__legend-sample-0 {
+	fill: $blue-dark;
+}
+
+ .line-chart__legend-sample-1 {
+	fill: $blue-medium;
+}
+
+.line-chart__legend-sample-2 {
+	fill: $blue-light;
+}
+
+.line-chart__legend-sample-0-fill {
+	fill: $blue-dark;
+}
+
+ .line-chart__legend-sample-1-fill {
+	fill: $blue-medium;
+}
+
+.line-chart__legend-sample-2-fill {
+	fill: $blue-light;
+}
