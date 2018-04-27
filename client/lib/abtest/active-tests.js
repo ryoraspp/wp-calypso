@@ -108,4 +108,12 @@ export default {
 		},
 		defaultVariation: 'no',
 	},
+	jetpackSignupGoogleTop: {
+		datestamp: '20180427',
+		variations: {
+			original: 50,
+			top: 50,
+		},
+		defaultVariation: 'original',
+	},
 };
