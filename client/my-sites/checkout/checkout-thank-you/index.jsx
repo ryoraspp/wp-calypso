@@ -259,8 +259,51 @@ export class CheckoutThankYou extends React.Component {
 		return moment( this.props.userDate ).isAfter( moment().subtract( 2, 'hours' ) );
 	};
 
+	getAnalyticsProperties = () => {
+		const { gsuiteReceiptId, receiptId, selectedFeature: feature, selectedSite } = this.props;
+		const site = selectedSite.slug;
+
+		if ( gsuiteReceiptId ) {
+			return {
+				path: '/checkout/thank-you/:site/:receipt_id/with-gsuite/:gsuite_receipt_id',
+				properties: { gsuiteReceiptId, receiptId, site },
+			};
+		}
+		if ( feature && receiptId ) {
+			return {
+				path: '/checkout/thank-you/features/:feature/:site/:receipt_id',
+				properties: { feature, receiptId, site },
+			};
+		}
+		if ( feature && ! receiptId ) {
+			return {
+				path: '/checkout/thank-you/features/:feature/:site',
+				properties: { feature, site },
+			};
+		}
+		if ( receiptId && selectedSite ) {
+			return {
+				path: '/checkout/thank-you/:site/:receipt_id',
+				properties: { receiptId, site },
+			};
+		}
+		if ( receiptId && ! selectedSite ) {
+			return {
+				path: '/checkout/thank-you/no-site/:receipt_id',
+				properties: { receiptId },
+			};
+		}
+		if ( selectedSite ) {
+			return {
+				path: '/checkout/thank-you/:site',
+				properties: { site },
+			};
+		}
+		return { path: '/checkout/thank-you/no-site', properties: {} };
+	};
+
 	render() {
-		const { analyticsPath, analyticsProps, translate } = this.props;
+		const { translate } = this.props;
 		let purchases = [];
 		let failedPurchases = [];
 		let wasJetpackPlanPurchased = false;
@@ -301,8 +344,7 @@ export class CheckoutThankYou extends React.Component {
 			return (
 				<RebrandCitiesThankYou
 					receipt={ this.props.receipt }
-					analyticsPath={ analyticsPath }
-					analyticsProps={ analyticsProps }
+					analyticsProperties={ this.getAnalyticsProperties() }
 				/>
 			);
 		}
@@ -312,11 +354,7 @@ export class CheckoutThankYou extends React.Component {
 		if ( wasDotcomPlanPurchased && ( hasPendingAT || isAtomicSite ) ) {
 			return (
 				<Main className="checkout-thank-you">
-					<PageViewTracker
-						path={ analyticsPath }
-						title="Checkout Thank You"
-						properties={ analyticsProps }
-					/>
+					<PageViewTracker { ...this.getAnalyticsProperties() } title="Checkout Thank You" />
 					{ this.renderConfirmationNotice() }
 					<AtomicStoreThankYouCard siteId={ this.props.selectedSite.ID } />
 				</Main>
@@ -337,11 +375,7 @@ export class CheckoutThankYou extends React.Component {
 			// streamlined paid NUX thanks page
 			return (
 				<Main className="checkout-thank-you">
-					<PageViewTracker
-						path={ analyticsPath }
-						title="Checkout Thank You"
-						properties={ analyticsProps }
-					/>
+					<PageViewTracker { ...this.getAnalyticsProperties() } title="Checkout Thank You" />
 					{ this.renderConfirmationNotice() }
 					<PlanThankYouCard siteId={ this.props.selectedSite.ID } { ...planProps } />
 				</Main>
@@ -349,11 +383,7 @@ export class CheckoutThankYou extends React.Component {
 		} else if ( wasJetpackPlanPurchased && config.isEnabled( 'plans/jetpack-config-v2' ) ) {
 			return (
 				<Main className="checkout-thank-you">
-					<PageViewTracker
-						path={ analyticsPath }
-						title="Checkout Thank You"
-						properties={ analyticsProps }
-					/>
+					<PageViewTracker { ...this.getAnalyticsProperties() } title="Checkout Thank You" />
 					{ this.renderConfirmationNotice() }
 					<JetpackThankYouCard siteId={ this.props.selectedSite.ID } />
 				</Main>
@@ -365,11 +395,7 @@ export class CheckoutThankYou extends React.Component {
 
 			return (
 				<Main className="checkout-thank-you">
-					<PageViewTracker
-						path={ analyticsPath }
-						title="Checkout Thank You"
-						properties={ analyticsProps }
-					/>
+					<PageViewTracker { ...this.getAnalyticsProperties() } title="Checkout Thank You" />
 					{ this.renderConfirmationNotice() }
 
 					<ThankYouCard
@@ -393,11 +419,7 @@ export class CheckoutThankYou extends React.Component {
 		// standard thanks page
 		return (
 			<Main className="checkout-thank-you">
-				<PageViewTracker
-					path={ analyticsPath }
-					title="Checkout Thank You"
-					properties={ analyticsProps }
-				/>
+				<PageViewTracker { ...this.getAnalyticsProperties() } title="Checkout Thank You" />
 				<HeaderCake onClick={ this.goBack } isCompact backText={ goBackText } />
 
 				<Card className="checkout-thank-you__content">{ this.productRelatedMessages() }</Card>
