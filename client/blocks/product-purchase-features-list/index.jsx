@@ -133,7 +133,6 @@ export class ProductPurchaseFeaturesList extends Component {
 					onClick={ this.props.recordReturnToDashboardClick }
 					selectedSite={ selectedSite }
 				/>
-				<SellOnlinePaypal />
 			</Fragment>
 		);
 	}
@@ -171,7 +170,6 @@ export class ProductPurchaseFeaturesList extends Component {
 				<JetpackBackupSecurity />
 				<JetpackAntiSpam />
 				<JetpackReturnToDashboard selectedSite={ selectedSite } />
-				<SellOnlinePaypal />
 			</Fragment>
 		);
 	}
