@@ -55,7 +55,7 @@ export class PaymentBox extends PureComponent {
 			case 'ideal':
 				labelAdditionalText = paymentMethodName( method );
 				break;
-			case 'tef':
+			case 'brazil-tef':
 				labelAdditionalText = paymentMethodName( method );
 				break;
 		}
